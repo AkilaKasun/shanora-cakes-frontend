@@ -71,29 +71,31 @@ const Gallery = () => {
     return () => ctx.revert();
   }, []);
 
+// ... keep imports and GSAP logic the same ...
+
   return (
-    <section id="gallery" className="py-20 bg-base-light px-6">
+    <section id="gallery" className="py-20 bg-base-light px-4 sm:px-6">
       <div className="container mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-5xl font-title text-shanora-dark mb-4">
+          <h2 className="text-4xl md:text-5xl font-title text-shanora-dark mb-4">
             Our <span className="text-shanora-purple">Gallery</span>
           </h2>
           <div className="h-1 w-24 bg-shanora-pink mx-auto rounded-full"></div>
         </div>
 
-        {/* Masonry Layout */}
+        {/* Updated Responsive Masonry Layout */}
         <div 
           ref={galleryRef}
-          className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4"
+          className="columns-2 md:columns-3 xl:columns-4 gap-3 sm:gap-4 space-y-3 sm:space-y-4"
         >
           {galleryImages.map((image) => (
             <div 
               key={image.id} 
-              className="gallery-item break-inside-avoid group relative overflow-hidden rounded-xl border border-white/40 shadow-sm hover:shadow-xl transition-all duration-500"
+              className="gallery-item break-inside-avoid group relative overflow-hidden rounded-xl border border-white/40 shadow-sm hover:shadow-xl transition-all duration-500 bg-white"
             >
               {/* Purple Glass Hover Effect */}
-              <div className="absolute inset-0 bg-shanora-purple/30 backdrop-blur-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 flex items-center justify-center text-center p-4">
-                <span className="text-white font-title text-xl drop-shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+              <div className="absolute inset-0 bg-shanora-purple/30 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 flex items-center justify-center text-center p-2 sm:p-4">
+                <span className="text-white font-title text-sm sm:text-xl drop-shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                   {image.title}
                 </span>
               </div>
