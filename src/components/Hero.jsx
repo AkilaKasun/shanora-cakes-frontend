@@ -1,7 +1,7 @@
 import React, { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import { Link } from 'react-router-dom'; // Added for navigation
-import Cake from '../assets/MSGridd/C4.png'; 
+import Cake from '../assets/logo.png'; 
 
 // Import local assets
 import BgLightPinkCake from '../assets/cake.jpg';
