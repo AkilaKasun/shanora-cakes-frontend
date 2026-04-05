@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { IoChevronDownOutline } from 'react-icons/io5'; // Optional icon
 
 // Import images from your MSGridd folder
 import img1 from '../assets/MSGridd/1.png';
@@ -21,8 +22,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Gallery = () => {
   const galleryRef = useRef(null);
+  
+  // 1. ADD STATE FOR VISIBILITY
+  const [showAll, setShowAll] = useState(false);
+  const INITIAL_COUNT = 10;
 
-  // Array mapping your imported assets
   const galleryImages = [
     { id: 1, src: img1, title: 'Signature Cakes' },
     { id: 2, src: j1, title: 'Fresh Bakes' },
@@ -39,25 +43,20 @@ const Gallery = () => {
     { id: 13, src: cc6, title: 'Party Favors' },
   ];
 
+  // 2. FILTER IMAGES BASED ON STATE
+  const visibleImages = showAll ? galleryImages : galleryImages.slice(0, INITIAL_COUNT);
 
-//     const galleryImages = [
-//     { id: 1, src: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587', title: 'Customized Cake' },
-//     { id: 2, src: 'https://images.unsplash.com/photo-1550617931-e17a7b70dce2', title: 'Purple Cupcakes' },
-//     { id: 3, src: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3', title: 'Pastel Brownies' },
-//     { id: 4, src: 'https://images.unsplash.com/photo-1519340333755-56e9c1d04579', title: 'Bento Cakes' },
-//     { id: 5, src: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e', title: 'Pink Delights' },
-//     { id: 6, src: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c', title: 'Chocolate Gems' },
-//   ];
   useEffect(() => {
     const items = galleryRef.current.querySelectorAll('.gallery-item');
     
     let ctx = gsap.context(() => {
       gsap.fromTo(items, 
-        { opacity: 0, y: 50 },
+        { opacity: 0, y: 30, scale: 0.95 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          scale: 1,
+          duration: 0.6,
           stagger: 0.1,
           ease: "power2.out",
           scrollTrigger: {
@@ -69,9 +68,7 @@ const Gallery = () => {
     }, galleryRef);
 
     return () => ctx.revert();
-  }, []);
-
-// ... keep imports and GSAP logic the same ...
+  }, [visibleImages]); // Re-run animation when more images are added
 
   return (
     <section id="gallery" className="py-20 bg-base-light px-4 sm:px-6">
@@ -83,19 +80,18 @@ const Gallery = () => {
           <div className="h-1 w-24 bg-shanora-pink mx-auto rounded-full"></div>
         </div>
 
-        {/* Updated Responsive Masonry Layout */}
+        {/* Masonry Layout */}
         <div 
           ref={galleryRef}
-          className="columns-2 md:columns-3 xl:columns-4 gap-3 sm:gap-4 space-y-3 sm:space-y-4"
+          className="columns-2 md:columns-3 xl:columns-4 gap-4 space-y-4 transition-all duration-700"
         >
-          {galleryImages.map((image) => (
+          {visibleImages.map((image) => (
             <div 
               key={image.id} 
-              className="gallery-item break-inside-avoid group relative overflow-hidden rounded-xl border border-white/40 shadow-sm hover:shadow-xl transition-all duration-500 bg-white"
+              className="gallery-item break-inside-avoid group relative overflow-hidden rounded-2xl border border-white/40 shadow-sm hover:shadow-xl transition-all duration-500 bg-white"
             >
-              {/* Purple Glass Hover Effect */}
-              <div className="absolute inset-0 bg-shanora-purple/30 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 flex items-center justify-center text-center p-2 sm:p-4">
-                <span className="text-white font-title text-sm sm:text-xl drop-shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+              <div className="absolute inset-0 bg-shanora-purple/30 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 flex items-center justify-center text-center p-4">
+                <span className="text-white font-title text-lg sm:text-xl drop-shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                   {image.title}
                 </span>
               </div>
@@ -109,6 +105,19 @@ const Gallery = () => {
             </div>
           ))}
         </div>
+
+        {/* 3. EXPLORE MORE BUTTON */}
+        {!showAll && galleryImages.length > INITIAL_COUNT && (
+          <div className="mt-16 text-center">
+            <button 
+              onClick={() => setShowAll(true)}
+              className="group bg-white border-2 border-shanora-purple text-shanora-purple px-10 py-4 rounded-full font-bold text-lg hover:bg-shanora-purple hover:text-white transition-all duration-300 shadow-lg flex items-center gap-2 mx-auto"
+            >
+              Explore More 
+              <IoChevronDownOutline className="group-hover:translate-y-1 transition-transform" />
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
