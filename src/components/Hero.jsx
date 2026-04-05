@@ -104,7 +104,7 @@ const Hero = () => {
             <img 
               src={Cake} 
               alt="Featured Cake" 
-              className="h-[300px] sm:h-[450px] lg:h-[550px] xl:h-[650px] w-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] object-contain" 
+              className="h-[200px] sm:h-[350px] lg:h-[450px] xl:h-[550px] w-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] object-contain" 
             />
           </div>
           
