@@ -1,0 +1,43 @@
+/* @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Inter:wght@400;600;700&display=swap'); */
+
+@import "tailwindcss";
+
+@theme {
+  /* Brand Colors */
+  --color-shanora-purple: #C19AEC;
+  --color-shanora-pink: #F4C2E9;
+  --color-shanora-dark: #4A3B6B;
+  --color-base-light: #FDFDFD;
+
+
+  --color-shanora-purple-light: #F0E6FF; /* A very soft, translucent purple for the glow */
+
+  /* Create the custom light purple shadow glow */
+  --shadow-purple-glow: 0 10px 40px -5px rgba(240, 230, 255, 0.4), 0 5px 15px -10px rgba(193, 154, 236, 0.2);
+  /* Fonts */
+  --font-title: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
+
+  /* Custom Shadow */
+  --shadow-elegant: 0 4px 15px -1px rgba(193, 154, 236, 0.1), 0 2px 6px -1px rgba(193, 154, 236, 0.05);
+}
+
+/* Global Styles & Font Imports */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap');
+
+@layer base {
+  :root {
+    background-color: var(--color-base-light);
+    color: var(--color-shanora-dark);
+  }
+
+  body {
+    @apply antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-title);
+  }
+}
+
