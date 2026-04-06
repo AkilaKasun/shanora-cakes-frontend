@@ -50,16 +50,16 @@ export const conversation = {
         { label: "Bento Cake", next: "bento_flavor" }
       ]
     },
-    butter_icing: { message: "With icing?", options: [{ label: "With Icing", next: "size" }, { label: "Without Icing", next: "size" }] },
-    choco_icing: { message: "With icing?", options: [{ label: "With Icing", next: "size" }, { label: "Without Icing", next: "size" }] },
+    butter_icing: { message: "With icing Layer?", options: [{ label: "With Icing", next: "size" }, { label: "Without Icing", next: "size" }] },
+    choco_icing: { message: "With icing Layer?", options: [{ label: "With Icing", next: "size" }, { label: "Without Icing", next: "size" }] },
     ribbon_flavor: { message: "Select flavor", options: [{ label: "Butter", next: "ribbon_icing" }, { label: "Chocolate", next: "ribbon_icing" }] },
-    ribbon_icing: { message: "With icing?", options: [{ label: "With Icing", next: "size" }, { label: "Without Icing", next: "size" }] },
+    ribbon_icing: { message: "With icing Layer?", options: [{ label: "With Icing", next: "size" }, { label: "Without Icing", next: "size" }] },
     cupcakes: { message: "Select cupcake type", options: [{ label: "Vanilla Cupcakes", next: "final" }, { label: "Chocolate Cupcakes", next: "final" }] },
     brownies: { message: "Brownies available", options: [{ label: "Small Brownies", next: "final" }, { label: "Large Brownies", next: "final" }] },
     bento_flavor: { message: "Select flavor", options: [{ label: "Butter", next: "final" }, { label: "Chocolate", next: "final" }] },
     size: { message: "Select size", options: [{ label: "500g", next: "final" }, { label: "1kg", next: "final" }, { label: "2kg", next: "final" }] },
     final: {
-      template: "🍰 {cakeName}\n✨ {details}\n💰 Price: {price}\n\n⚠️ Note: Prices may change based on designs and add-ons. These are average prices only.",
+      template: "🍰 {cakeName}\n✨ {details}\n💰 Price: {price}\n\n⚠️ Note: Please note that these prices are not real prices as the site is still in maintenance condition",
       options: [
         { label: "⬅ Go Back", next: "cake_type" },
         { label: "🏠 Main Menu", next: "start" },
@@ -98,16 +98,16 @@ export const conversation = {
         { label: "බෙන්ටෝ කේක්", next: "bento_flavor" }
       ]
     },
-    butter_icing: { message: "අයිසිං සමගද?", options: [{ label: "ඔව්", next: "size" }, { label: "නැහැ", next: "size" }] },
-    choco_icing: { message: "අයිසිං සමගද?", options: [{ label: "ඔව්", next: "size" }, { label: "නැහැ", next: "size" }] },
+    butter_icing: { message: "අයිසින් ලේයර් එකක් සමගද?", options: [{ label: "ඔව්", next: "size" }, { label: "නැහැ", next: "size" }] },
+    choco_icing: { message: "අයිසින් ලේයර් එකක් සමගද?", options: [{ label: "ඔව්", next: "size" }, { label: "නැහැ", next: "size" }] },
     ribbon_flavor: { message: "රසය තෝරන්න", options: [{ label: "බටර්", next: "ribbon_icing" }, { label: "චොකලට්", next: "ribbon_icing" }] },
-    ribbon_icing: { message: "අයිසිං සමගද?", options: [{ label: "ඔව්", next: "size" }, { label: "නැහැ", next: "size" }] },
+    ribbon_icing: { message: "අයිසින් ලේයර් එකක් සමගද?", options: [{ label: "ඔව්", next: "size" }, { label: "නැහැ", next: "size" }] },
     cupcakes: { message: "කප් කේක් වර්ගය", options: [{ label: "වැනිලා", next: "final" }, { label: "චොකලට්", next: "final" }] },
     brownies: { message: "බ්‍රව්නි", options: [{ label: "කුඩා", next: "final" }, { label: "විශාල", next: "final" }] },
     bento_flavor: { message: "රසය", options: [{ label: "බටර්", next: "final" }, { label: "චොකලට්", next: "final" }] },
     size: { message: "ප්‍රමාණය තෝරන්න", options: [{ label: "500g", next: "final" }, { label: "1kg", next: "final" }, { label: "2kg", next: "final" }] },
     final: {
-      template: "🍰 {cakeName}\n✨ {details}\n💰 මිල: {price}\n\n⚠️ සටහන: ඩිසයින් සහ add-ons අනුව මිල වෙනස් විය හැක. මේවා සාමාන්‍ය මිල වේ.",
+      template: "🍰 {cakeName}\n✨ {details}\n💰 මිල: {price}\n\n⚠️ සටහන: වෙබ් අඩවිය තවමත් නඩත්තු තත්වයේ පවතින බැවින් මෙම මිල ගණන් සැබෑ මිල ගණන් නොවන බව කරුණාවෙන් සලකන්න",
       options: [
         { label: "⬅ ආපසු යන්න", next: "cake_type" },
         { label: "🏠 ප්‍රධාන මෙනුව", next: "start" },
@@ -266,7 +266,7 @@ export const conversation = {
 //     },
 
 //     butter_icing: {
-//       message: "අයිසිං සමගද?",
+//       message: "අයිසින් ලේයර් එකක් සමගද?",
 //       options: [
 //         { label: "ඔව්", next: "size" },
 //         { label: "නැහැ", next: "size" }
