@@ -35,7 +35,7 @@ export const conversation = {
       options: [
         { label: "WhatsApp", action: "WHATSAPP" },
         { label: "Facebook", action: "FACEBOOK" },
-        { label: "LinkedIn", action: "LINKEDIN" },
+        { label: "Instagram", action: "INSTAGRAM" },
         { label: "Back", next: "start" }
       ]
     },
@@ -83,7 +83,7 @@ export const conversation = {
       options: [
         { label: "WhatsApp", action: "WHATSAPP" },
         { label: "Facebook", action: "FACEBOOK" },
-        { label: "LinkedIn", action: "LINKEDIN" },
+        { label: "Instagram", action: "INSTAGRAM" },
         { label: "ආපසු", next: "start" }
       ]
     },

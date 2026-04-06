@@ -53,7 +53,10 @@ export default function ChatBot() {
       window.open("https://wa.me/94722146868", "_blank");
     }
     if (opt.action === "FACEBOOK") {
-      window.open("https://facebook.com/shanoracakes", "_blank");
+      window.open("https://www.facebook.com/profile.php?id=61588449220490", "_blank");
+    }
+    if (opt.action === "INSTAGRAM") {
+      window.open("https://www.instagram.com/shanora_cakes/", "_blank");
     }
     if (opt.action === "LINKEDIN") {
       window.open("https://linkedin.com/company/shanoracakes", "_blank");
