@@ -23,9 +23,17 @@ export default function ChatBot() {
       newSelection.cake = opt.label;
       newSelection.details = "";
     } 
-    // 2. Accumulate details (Flavors, Icing, Sizes) before hitting 'final' or actions
+    // 2. FIXED: Accumulate details but filter out "Yes/No" and Icing choices
     else if (!opt.action && opt.next !== "start" && opt.next !== "cake_type") {
-      newSelection.details += (newSelection.details ? " | " : "") + opt.label;
+      const filterLabels = [
+        "With Icing", "Without Icing", "With Icing Layer?", 
+        "ඔව්", "නැහැ", "අයිසින් ලේයර් එකක් සමගද?"
+      ];
+
+      // Only add to details if it's NOT a flavor/icing question response
+      if (!filterLabels.includes(opt.label)) {
+        newSelection.details += (newSelection.details ? " | " : "") + opt.label;
+      }
     }
 
     // 3. Price Calculation when the next step is 'final'
@@ -80,19 +88,16 @@ export default function ChatBot() {
 
   return (
     <>
-      {/* --- REDESIGNED ATTRACTIVE BUTTON --- */}
+      {/* --- FLOATING BUTTON --- */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setOpen(!open)}
         className="fixed bottom-6 right-6 group flex items-center justify-center w-16 h-16 bg-shanora-purple text-white rounded-full z-50 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:shadow-[0_8px_30px_rgba(147,51,234,0.5)]"
       >
-        {/* Gentle Pulsing Glow Effect behind the button */}
         {!open && (
           <span className="absolute inset-0 rounded-full bg-shanora-purple animate-ping opacity-25"></span>
         )}
-
-        {/* Dynamic SVG Icon (Cross when open, Chat Bubble when closed) */}
         {open ? (
           <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -123,27 +128,16 @@ export default function ChatBot() {
               </button>
             </div>
 
-            {/* Scrollable Content Area */}
             <div className="p-4 space-y-3 overflow-y-auto">
               {!lang && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="space-y-3"
-                >
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
                   <p className="text-sm font-medium text-gray-700 text-center mb-4">
                     Select Language / භාෂාව තෝරන්න
                   </p>
-                  <button
-                    onClick={() => setLang("en")}
-                    className="w-full bg-purple-50 text-purple-700 hover:bg-purple-100 hover:shadow-sm p-3 rounded-xl font-medium border border-purple-100 transition-all"
-                  >
+                  <button onClick={() => setLang("en")} className="w-full bg-purple-50 text-purple-700 hover:bg-purple-100 p-3 rounded-xl font-medium border border-purple-100 transition-all">
                     English
                   </button>
-                  <button
-                    onClick={() => setLang("si")}
-                    className="w-full bg-purple-50 text-purple-700 hover:bg-purple-100 hover:shadow-sm p-3 rounded-xl font-medium border border-purple-100 transition-all"
-                  >
+                  <button onClick={() => setLang("si")} className="w-full bg-purple-50 text-purple-700 hover:bg-purple-100 p-3 rounded-xl font-medium border border-purple-100 transition-all">
                     සිංහල
                   </button>
                 </motion.div>
