@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { conversation, prices } from "./conversation";
+import { useNavigate } from "react-router-dom";
 
 export default function ChatBot() {
   const [open, setOpen] = useState(false);
   const [lang, setLang] = useState(null);
   const [step, setStep] = useState("start");
+  const navigate = useNavigate();
 
   const [selection, setSelection] = useState({
     cake: "",
@@ -47,7 +49,7 @@ export default function ChatBot() {
       document.querySelector("#gallery")?.scrollIntoView({ behavior: "smooth" });
     }
     if (opt.action === "ORDER") {
-      window.location.href = "/order";
+      navigate("/order");
     }
     if (opt.action === "WHATSAPP") {
       window.open("https://wa.me/94722146868", "_blank");
