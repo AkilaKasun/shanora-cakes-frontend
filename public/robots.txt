@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shanora-cakes-frontend.vercel.app/sitemap.xml
