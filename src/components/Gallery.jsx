@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { IoChevronDownOutline } from 'react-icons/io5';
 
+// Import your assets
 import img1 from '../assets/MSGridd/1.png';
 import img3 from '../assets/MSGridd/3.png';
 import img4 from '../assets/MSGridd/4.png';
@@ -26,8 +27,7 @@ const Gallery = () => {
   const [showAll, setShowAll] = useState(false);
   const INITIAL_COUNT = 10;
   
-    
-    const galleryImages = [
+  const galleryImages = [
     { id: 1, src: img1, title: 'Signature Cakes' },
     { id: 2, src: j1, title: 'Fresh Bakes' },
     { id: 3, src: c1, title: 'Customized Designs' },
@@ -53,94 +53,123 @@ const Gallery = () => {
       isDesktop: "(min-width: 1024px)",
       isMobile: "(max-width: 1023px)"
     }, (context) => {
-      let { isMobile } = context.conditions;
+      let { isDesktop } = context.conditions;
 
-      // Dynamic end value: Mobile needs a much shorter scroll to feel "right"
-      const scrollDistance = isMobile ? "+=1000" : "+=2000";
+      if (isDesktop) {
+        // DESKTOP: Pinning Assembly Animation
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",      
+            end: "+=2000", 
+            pin: true,             
+            pinSpacing: true,      
+            scrub: 1,              
+            invalidateOnRefresh: true,
+          }
+        });
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",      
-          end: scrollDistance, 
-          pin: true,             
-          pinSpacing: true,      
-          scrub: 1,              
-          invalidateOnRefresh: true,
-          anticipatePin: 1,
-        }
-      });
-
-      items.forEach((item) => {
-        // We reduce the "messy" range on mobile so images don't fly off-screen
-        const rangeMultiplier = isMobile ? 0.5 : 1; 
-
-        tl.fromTo(item, 
-          { 
-            opacity: 0, 
-            x: (Math.random() - 0.5) * (2000 * rangeMultiplier), 
-            y: (Math.random() - 0.5) * (1000 * rangeMultiplier), 
-            rotation: (Math.random() - 0.5) * 120, 
-            scale: 0.2 
-          },
-          { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, ease: "power2.inOut" },
-          0 
-        );
-      });
+        items.forEach((item) => {
+          tl.fromTo(item, 
+            { 
+              opacity: 0, 
+              x: (Math.random() - 0.5) * 2000, 
+              y: (Math.random() - 0.5) * 1000, 
+              rotation: (Math.random() - 0.5) * 120, 
+              scale: 0.2 
+            },
+            { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, ease: "power3.inOut" },
+            0 
+          );
+        });
+      } else {
+        // MOBILE: Reveal Animation (No Pinning)
+        // This prevents the overlap/override issue seen in your screenshot
+        items.forEach((item) => {
+          gsap.fromTo(item, 
+            { opacity: 0, y: 40, scale: 0.95 },
+            { 
+              opacity: 1, 
+              y: 0, 
+              scale: 1,
+              duration: 0.8,
+              scrollTrigger: {
+                trigger: item,
+                start: "top 90%",
+                toggleActions: "play none none reverse",
+              }
+            }
+          );
+        });
+      }
     });
 
+    // Clean up and refresh triggers to ensure button and images are measured correctly
+    ScrollTrigger.refresh();
     return () => mm.revert();
-  }, [visibleImages]); // Re-run when "Explore More" is clicked
+  }, [visibleImages]); 
+
+  const handleExploreMore = () => {
+    setShowAll(true);
+    // Use a small timeout to let the DOM update before scrolling
+    setTimeout(() => {
+      const offset = containerRef.current.offsetTop;
+      window.scrollTo({
+        top: offset,
+        behavior: 'smooth'
+      });
+    }, 100);
+  };
 
   return (
     <section 
       ref={containerRef} 
       id="gallery" 
-      className="relative py-12 lg:py-24 bg-base-light px-4 overflow-hidden"
+      // h-auto on mobile is critical so it doesn't cut off content
+      className="relative py-16 lg:py-24 bg-base-light px-4 overflow-visible h-auto lg:min-h-screen"
     >
       <div className="container mx-auto">
-        <div className="text-center mb-8 lg:mb-16">
-          <h2 className="text-3xl lg:text-5xl font-title text-shanora-dark">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-title text-shanora-dark mb-4">
             Our <span className="text-shanora-purple">Gallery</span>
           </h2>
+          <div className="h-1 w-24 bg-shanora-pink mx-auto rounded-full"></div>
         </div>
 
-        {/* On mobile, 'columns-2' makes cards very long. 
-           We add 'pb-20' to ensure the 'Explore More' button 
-           isn't covered during the pin.
-        */}
         <div 
           ref={galleryRef}
-          className="columns-2 md:columns-3 xl:columns-4 gap-4 lg:gap-6 space-y-4 lg:space-y-6 pb-24"
+          // We use columns-2 for mobile as requested, but add padding-bottom
+          // to ensure the "Explore More" button has space
+          className="columns-2 md:columns-3 xl:columns-4 gap-4 lg:gap-6 space-y-4 lg:space-y-6 pb-20"
         >
           {visibleImages.map((image) => (
             <div 
               key={`${image.id}-${showAll}`}
-              className="gallery-item break-inside-avoid group relative overflow-hidden rounded-xl border border-white/40 shadow-sm bg-white"
+              className="gallery-item break-inside-avoid group relative overflow-hidden rounded-xl lg:rounded-2xl border border-white/40 shadow-sm bg-white"
             >
+              <div className="absolute inset-0 bg-shanora-purple/30 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 flex items-center justify-center text-center p-4">
+                <span className="text-white font-title text-sm lg:text-xl drop-shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                  {image.title}
+                </span>
+              </div>
               <img 
                 src={image.src} 
                 alt={image.title} 
-                className="w-full h-auto object-cover"
+                className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-1000 ease-out"
+                loading="lazy"
               />
             </div>
           ))}
         </div>
 
         {!showAll && (
-          <div className="mt-4 text-center relative z-50">
+          <div className="mt-4 text-center relative z-50 pointer-events-auto">
             <button 
-              onClick={() => {
-                setShowAll(true);
-                // Reset scroll to the top of the section so the new 
-                // animation sequence starts from the beginning
-                const offset = containerRef.current.offsetTop;
-                window.scrollTo({ top: offset, behavior: 'instant' });
-              }}
-              className="group bg-white border-2 border-shanora-purple text-shanora-purple px-8 py-3 rounded-full font-bold hover:bg-shanora-purple hover:text-white transition-all shadow-lg flex items-center gap-2 mx-auto pointer-events-auto"
+              onClick={handleExploreMore}
+              className="group bg-white border-2 border-shanora-purple text-shanora-purple px-10 py-4 rounded-full font-bold text-lg hover:bg-shanora-purple hover:text-white transition-all duration-300 shadow-lg flex items-center gap-2 mx-auto"
             >
               Explore More 
-              <IoChevronDownOutline />
+              <IoChevronDownOutline className="group-hover:translate-y-1 transition-transform" />
             </button>
           </div>
         )}
