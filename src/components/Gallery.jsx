@@ -4,7 +4,6 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { IoChevronDownOutline } from 'react-icons/io5';
 
-// Import images from your MSGridd folder
 import img1 from '../assets/MSGridd/1.png';
 import img3 from '../assets/MSGridd/3.png';
 import img4 from '../assets/MSGridd/4.png';
@@ -27,7 +26,8 @@ const Gallery = () => {
   const [showAll, setShowAll] = useState(false);
   const INITIAL_COUNT = 10;
   
-  const galleryImages = [
+    
+    const galleryImages = [
     { id: 1, src: img1, title: 'Signature Cakes' },
     { id: 2, src: j1, title: 'Fresh Bakes' },
     { id: 3, src: c1, title: 'Customized Designs' },
@@ -46,107 +46,101 @@ const Gallery = () => {
   const visibleImages = showAll ? galleryImages : galleryImages.slice(0, INITIAL_COUNT);
 
   useLayoutEffect(() => {
-    // 1. Clear any existing triggers to prevent "ghost" heights or double pinning
-    ScrollTrigger.getAll().forEach(t => t.kill());
-
+    let mm = gsap.matchMedia();
     const items = galleryRef.current.querySelectorAll('.gallery-item');
-    
-    let ctx = gsap.context(() => {
+
+    mm.add({
+      isDesktop: "(min-width: 1024px)",
+      isMobile: "(max-width: 1023px)"
+    }, (context) => {
+      let { isMobile } = context.conditions;
+
+      // Dynamic end value: Mobile needs a much shorter scroll to feel "right"
+      const scrollDistance = isMobile ? "+=1000" : "+=2000";
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",      
-          end: "+=2500", // Increase this if you want a longer assembly time
+          end: scrollDistance, 
           pin: true,             
-          pinSpacing: true,      // Essential so the button/footer isn't overlapped
+          pinSpacing: true,      
           scrub: 1,              
-          anticipatePin: 1,
           invalidateOnRefresh: true,
+          anticipatePin: 1,
         }
       });
 
-      // 2. Animate ALL current items
-      // We use a slight stagger so they fly in sequence
       items.forEach((item) => {
-        const randomX = (Math.random() - 0.5) * 3000;
-        const randomY = (Math.random() - 0.5) * 2000;
-        const randomRot = (Math.random() - 0.5) * 180;
+        // We reduce the "messy" range on mobile so images don't fly off-screen
+        const rangeMultiplier = isMobile ? 0.5 : 1; 
 
         tl.fromTo(item, 
           { 
             opacity: 0, 
-            x: randomX, 
-            y: randomY, 
-            rotation: randomRot, 
-            scale: 0.1 
+            x: (Math.random() - 0.5) * (2000 * rangeMultiplier), 
+            y: (Math.random() - 0.5) * (1000 * rangeMultiplier), 
+            rotation: (Math.random() - 0.5) * 120, 
+            scale: 0.2 
           },
-          { 
-            opacity: 1, 
-            x: 0, 
-            y: 0, 
-            rotation: 0, 
-            scale: 1, 
-            ease: "power3.inOut" 
-          },
-          0 // 0 ensures they all start moving together as you scroll
+          { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, ease: "power2.inOut" },
+          0 
         );
       });
-    }, containerRef);
+    });
 
-    // 3. Refresh ScrollTrigger once the DOM has finished painting the new cards
-    ScrollTrigger.refresh();
-
-    return () => ctx.revert();
-  }, [showAll]); // This RE-RUNS everything whenever you click Explore More
+    return () => mm.revert();
+  }, [visibleImages]); // Re-run when "Explore More" is clicked
 
   return (
-    <section ref={containerRef} id="gallery" className="relative py-24 bg-base-light px-4 sm:px-6 overflow-hidden min-h-screen">
+    <section 
+      ref={containerRef} 
+      id="gallery" 
+      className="relative py-12 lg:py-24 bg-base-light px-4 overflow-hidden"
+    >
       <div className="container mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-title text-shanora-dark mb-4">
+        <div className="text-center mb-8 lg:mb-16">
+          <h2 className="text-3xl lg:text-5xl font-title text-shanora-dark">
             Our <span className="text-shanora-purple">Gallery</span>
           </h2>
-          <div className="h-1 w-24 bg-shanora-pink mx-auto rounded-full"></div>
         </div>
 
+        {/* On mobile, 'columns-2' makes cards very long. 
+           We add 'pb-20' to ensure the 'Explore More' button 
+           isn't covered during the pin.
+        */}
         <div 
           ref={galleryRef}
-          className="columns-2 md:columns-3 xl:columns-4 gap-6 space-y-6 pb-20"
+          className="columns-2 md:columns-3 xl:columns-4 gap-4 lg:gap-6 space-y-4 lg:space-y-6 pb-24"
         >
           {visibleImages.map((image) => (
             <div 
-              key={`${image.id}-${showAll}`} // Unique key forces a clean re-render
-              className="gallery-item break-inside-avoid group relative overflow-hidden rounded-2xl border border-white/40 shadow-sm bg-white"
+              key={`${image.id}-${showAll}`}
+              className="gallery-item break-inside-avoid group relative overflow-hidden rounded-xl border border-white/40 shadow-sm bg-white"
             >
-              <div className="absolute inset-0 bg-shanora-purple/30 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 flex items-center justify-center text-center p-4">
-                <span className="text-white font-title text-lg sm:text-xl drop-shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                  {image.title}
-                </span>
-              </div>
               <img 
                 src={image.src} 
                 alt={image.title} 
-                className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-1000 ease-out"
+                className="w-full h-auto object-cover"
               />
             </div>
           ))}
         </div>
 
         {!showAll && (
-          <div className="mt-10 text-center relative z-50">
+          <div className="mt-4 text-center relative z-50">
             <button 
               onClick={() => {
                 setShowAll(true);
-                // Force scroll to top of section so animation starts fresh
-                window.scrollTo({
-                  top: containerRef.current.offsetTop,
-                  behavior: 'smooth'
-                });
+                // Reset scroll to the top of the section so the new 
+                // animation sequence starts from the beginning
+                const offset = containerRef.current.offsetTop;
+                window.scrollTo({ top: offset, behavior: 'instant' });
               }}
-              className="group bg-white border-2 border-shanora-purple text-shanora-purple px-10 py-4 rounded-full font-bold text-lg hover:bg-shanora-purple hover:text-white transition-all duration-300 shadow-lg flex items-center gap-2 mx-auto pointer-events-auto"
+              className="group bg-white border-2 border-shanora-purple text-shanora-purple px-8 py-3 rounded-full font-bold hover:bg-shanora-purple hover:text-white transition-all shadow-lg flex items-center gap-2 mx-auto pointer-events-auto"
             >
               Explore More 
-              <IoChevronDownOutline className="group-hover:translate-y-1 transition-transform" />
+              <IoChevronDownOutline />
             </button>
           </div>
         )}
