@@ -4,7 +4,6 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { IoChevronDownOutline } from 'react-icons/io5';
 
-// Import your assets
 import img1 from '../assets/MSGridd/1.png';
 import img3 from '../assets/MSGridd/3.png';
 import img4 from '../assets/MSGridd/4.png';
@@ -25,7 +24,9 @@ const Gallery = () => {
   const galleryRef = useRef(null);
   const containerRef = useRef(null);
   const [showAll, setShowAll] = useState(false);
-  const INITIAL_COUNT = 10;
+  
+  // Reduced to 8 so button is more likely to be visible above the scroll-end
+  const INITIAL_COUNT = 8; 
   
   const galleryImages = [
     { id: 1, src: img1, title: 'Signature Cakes' },
@@ -56,12 +57,11 @@ const Gallery = () => {
       let { isDesktop } = context.conditions;
 
       if (isDesktop) {
-        // DESKTOP: Pinning Assembly Animation
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: containerRef.current,
             start: "top top",      
-            end: "+=2000", 
+            end: "+=1200", // Reduced distance so user reaches the button faster
             pin: true,             
             pinSpacing: true,      
             scrub: 1,              
@@ -73,26 +73,23 @@ const Gallery = () => {
           tl.fromTo(item, 
             { 
               opacity: 0, 
-              x: (Math.random() - 0.5) * 2000, 
-              y: (Math.random() - 0.5) * 1000, 
-              rotation: (Math.random() - 0.5) * 120, 
+              x: (Math.random() - 0.5) * 1500, 
+              y: (Math.random() - 0.5) * 800, 
+              rotation: (Math.random() - 0.5) * 90, 
               scale: 0.2 
             },
-            { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, ease: "power3.inOut" },
+            { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, ease: "power2.inOut" },
             0 
           );
         });
       } else {
-        // MOBILE: Reveal Animation (No Pinning)
-        // This prevents the overlap/override issue seen in your screenshot
         items.forEach((item) => {
           gsap.fromTo(item, 
-            { opacity: 0, y: 40, scale: 0.95 },
+            { opacity: 0, y: 30 },
             { 
               opacity: 1, 
               y: 0, 
-              scale: 1,
-              duration: 0.8,
+              duration: 0.6,
               scrollTrigger: {
                 trigger: item,
                 start: "top 90%",
@@ -104,20 +101,16 @@ const Gallery = () => {
       }
     });
 
-    // Clean up and refresh triggers to ensure button and images are measured correctly
     ScrollTrigger.refresh();
     return () => mm.revert();
-  }, [visibleImages]); 
+  }, [visibleImages, showAll]); 
 
-  const handleExploreMore = () => {
+  const handleExploreMore = (e) => {
+    e.preventDefault();
     setShowAll(true);
-    // Use a small timeout to let the DOM update before scrolling
+    // Force a small delay to allow DOM to render before refresh
     setTimeout(() => {
-      const offset = containerRef.current.offsetTop;
-      window.scrollTo({
-        top: offset,
-        behavior: 'smooth'
-      });
+      ScrollTrigger.refresh();
     }, 100);
   };
 
@@ -125,10 +118,9 @@ const Gallery = () => {
     <section 
       ref={containerRef} 
       id="gallery" 
-      // h-auto on mobile is critical so it doesn't cut off content
-      className="relative py-16 lg:py-24 bg-base-light px-4 overflow-visible h-auto lg:min-h-screen"
+      className="relative py-16 lg:py-24 bg-base-light px-4 overflow-visible min-h-screen"
     >
-      <div className="container mx-auto">
+      <div className="container mx-auto flex flex-col items-center">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-title text-shanora-dark mb-4">
             Our <span className="text-shanora-purple">Gallery</span>
@@ -138,9 +130,7 @@ const Gallery = () => {
 
         <div 
           ref={galleryRef}
-          // We use columns-2 for mobile as requested, but add padding-bottom
-          // to ensure the "Explore More" button has space
-          className="columns-2 md:columns-3 xl:columns-4 gap-4 lg:gap-6 space-y-4 lg:space-y-6 pb-20"
+          className="columns-2 md:columns-3 xl:columns-4 gap-4 lg:gap-6 space-y-4 lg:space-y-6 w-full"
         >
           {visibleImages.map((image) => (
             <div 
@@ -148,25 +138,27 @@ const Gallery = () => {
               className="gallery-item break-inside-avoid group relative overflow-hidden rounded-xl lg:rounded-2xl border border-white/40 shadow-sm bg-white"
             >
               <div className="absolute inset-0 bg-shanora-purple/30 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 flex items-center justify-center text-center p-4">
-                <span className="text-white font-title text-sm lg:text-xl drop-shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                <span className="text-white font-title text-sm lg:text-xl">
                   {image.title}
                 </span>
               </div>
               <img 
                 src={image.src} 
                 alt={image.title} 
-                className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-1000 ease-out"
+                className="w-full h-auto object-cover"
                 loading="lazy"
               />
             </div>
           ))}
         </div>
 
-        {!showAll && (
-          <div className="mt-4 text-center relative z-50 pointer-events-auto">
+        {/* Explicitly check showAll and items length */}
+        {!showAll && galleryImages.length > INITIAL_COUNT && (
+          <div className="mt-12 mb-20 text-center relative z-[100] w-full">
             <button 
               onClick={handleExploreMore}
-              className="group bg-white border-2 border-shanora-purple text-shanora-purple px-10 py-4 rounded-full font-bold text-lg hover:bg-shanora-purple hover:text-white transition-all duration-300 shadow-lg flex items-center gap-2 mx-auto"
+              className="group bg-white border-2 border-shanora-purple text-shanora-purple px-10 py-4 rounded-full font-bold text-lg hover:bg-shanora-purple hover:text-white transition-all duration-300 shadow-xl flex items-center gap-2 mx-auto cursor-pointer"
+              style={{ pointerEvents: 'auto' }}
             >
               Explore More 
               <IoChevronDownOutline className="group-hover:translate-y-1 transition-transform" />
