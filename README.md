@@ -6,7 +6,9 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![GSAP](https://img.shields.io/badge/GSAP-88CE02?style=for-the-badge&logo=greensock&logoColor=white)](https://greensock.com/gsap/)
 
-A high-performance, visually stunning e-commerce and portfolio hybrid built for **Shanora Cakes**. This platform combines cinematic food photography with modern web animations to provide a seamless cake-ordering experience for customers in **Matale and Colombo**.
+A high-performance, visually stunning e-commerce and portfolio hybrid built for **Shanora Cakes**. This platform combines cinematic food photography with modern web animations to provide a seamless cake-ordering experience for customers in **Matale **.
+
+**Live webiste** https://shanora-cakes-frontend.vercel.app/
 
 ## ✨ Key Features
 
@@ -72,5 +74,5 @@ Owned and operated by a professional baker, Shanora Cakes specializes in:
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ### 📧 Contact
-Project Link: [https://github.com/your-username/shanora-cakes](https://github.com/your-username/shanora-cakes)  
+Project Link: [https://github.com/AkilaKasun/shanora-cakes]  
 Business Instagram: [@shanora_cakes](https://instagram.com/shanora_cakes)
