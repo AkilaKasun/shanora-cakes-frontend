@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useRef, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { IoChevronDownOutline } from 'react-icons/io5';
@@ -17,110 +17,187 @@ import c4 from '../assets/MSGridd/C4.png';
 import cc1 from '../assets/MSGridd/CC1.png';
 import cc3 from '../assets/MSGridd/CC3.png';
 import cc6 from '../assets/MSGridd/CC6.png';
+import N1 from '../assets/MSGridd/N1.jpeg';
+import N2 from '../assets/MSGridd/N2.jpeg';
+import N3 from '../assets/MSGridd/N3.jpeg';
+import N4 from '../assets/MSGridd/N4.jpeg';
+import N5 from '../assets/MSGridd/N5.jpeg';
+import N6 from '../assets/MSGridd/N6.jpeg';
+import N7 from '../assets/MSGridd/N7.jpeg';
+import N8 from '../assets/MSGridd/N8.jpeg';
+import N9 from '../assets/MSGridd/N9.jpeg';
+import N10 from '../assets/MSGridd/N10.jpeg';
+import N11 from '../assets/MSGridd/N11.jpeg';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const galleryImages = [
+  { id: 1, src: img1, title: 'Signature Cakes' },
+  { id: 2, src: j1, title: 'Fresh Bakes' },
+  { id: 3, src: c1, title: 'Customized Designs' },
+  { id: 4, src: img3, title: 'Sweet Treats' },
+  { id: 5, src: j2, title: 'Artisan Pastries' },
+  { id: 6, src: cc1, title: 'Premium Cupcakes' },
+  { id: 7, src: img4, title: 'Shanora Classics' },
+  { id: 8, src: c2, title: 'Celebration Cakes' },
+  { id: 9, src: cc3, title: 'Gourmet Selection' },
+  { id: 10, src: img5, title: 'Luxury Bites' },
+  { id: 11, src: j3, title: 'Oven Fresh' },
+  { id: 12, src: c4, title: 'Special Orders' },
+  { id: 13, src: cc6, title: 'Party Favors' },
+  { id: 14, src: N1, title: 'Custom Cake Design' },
+  { id: 15, src: N2, title: 'Birthday Special' },
+  { id: 16, src: N3, title: 'Chocolate Collection' },
+  { id: 17, src: N4, title: 'Wedding Cake' },
+  { id: 18, src: N5, title: 'Elegant Creation' },
+  { id: 19, src: N6, title: 'Sweet Celebration' },
+  { id: 20, src: N7, title: 'Premium Dessert' },
+  { id: 21, src: N8, title: 'Handcrafted Cake' },
+  { id: 22, src: N9, title: 'Luxury Design' },
+  { id: 23, src: N10, title: 'Special Occasion' },
+  { id: 24, src: N11, title: 'Shanora Signature' },
+];
+
+const INITIAL_COUNT = 8;
+
 const Gallery = () => {
   const galleryRef = useRef(null);
-  const containerRef = useRef(null);
+  const sectionRef = useRef(null);
+  const animationRef = useRef(null); // track the ScrollTrigger instance
   const [showAll, setShowAll] = useState(false);
-  
-  // Reduced to 8 so button is more likely to be visible above the scroll-end
-  const INITIAL_COUNT = 8; 
-  
-  const galleryImages = [
-    { id: 1, src: img1, title: 'Signature Cakes' },
-    { id: 2, src: j1, title: 'Fresh Bakes' },
-    { id: 3, src: c1, title: 'Customized Designs' },
-    { id: 4, src: img3, title: 'Sweet Treats' },
-    { id: 5, src: j2, title: 'Artisan Pastries' },
-    { id: 6, src: cc1, title: 'Premium Cupcakes' },
-    { id: 7, src: img4, title: 'Shanora Classics' },
-    { id: 8, src: c2, title: 'Celebration Cakes' },
-    { id: 9, src: cc3, title: 'Gourmet Selection' },
-    { id: 10, src: img5, title: 'Luxury Bites' },
-    { id: 11, src: j3, title: 'Oven Fresh' },
-    { id: 12, src: c4, title: 'Special Orders' },
-    { id: 13, src: cc6, title: 'Party Favors' },
-  ];
 
   const visibleImages = showAll ? galleryImages : galleryImages.slice(0, INITIAL_COUNT);
 
-  useLayoutEffect(() => {
-    let mm = gsap.matchMedia();
-    const items = galleryRef.current.querySelectorAll('.gallery-item');
+  // Phase 1: Initial scatter animation (only when NOT showAll)
+  useEffect(() => {
+    if (showAll) return; // skip entirely when expanded
 
-    mm.add({
-      isDesktop: "(min-width: 1024px)",
-      isMobile: "(max-width: 1023px)"
-    }, (context) => {
-      let { isDesktop } = context.conditions;
+    const ctx = gsap.context(() => {
+      const items = galleryRef.current?.querySelectorAll('.gallery-item');
+      if (!items || items.length === 0) return;
+
+      const isDesktop = window.innerWidth >= 1024;
 
       if (isDesktop) {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top top",      
-            end: "+=1200", // Reduced distance so user reaches the button faster
-            pin: true,             
-            pinSpacing: true,      
-            scrub: 1,              
-            invalidateOnRefresh: true,
-          }
-        });
+        // Set initial hidden state
+        gsap.set(items, { opacity: 0, scale: 0.2 });
 
-        items.forEach((item) => {
-          tl.fromTo(item, 
-            { 
-              opacity: 0, 
-              x: (Math.random() - 0.5) * 1500, 
-              y: (Math.random() - 0.5) * 800, 
-              rotation: (Math.random() - 0.5) * 90, 
-              scale: 0.2 
-            },
-            { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, ease: "power2.inOut" },
-            0 
-          );
+        animationRef.current = ScrollTrigger.create({
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: '+=1200',
+          pin: true,
+          pinSpacing: true,
+          scrub: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const p = self.progress;
+            items.forEach((item) => {
+              const randomX = parseFloat(item.dataset.rx || 0);
+              const randomY = parseFloat(item.dataset.ry || 0);
+              const randomR = parseFloat(item.dataset.rr || 0);
+              gsap.set(item, {
+                opacity: p,
+                x: randomX * (1 - p),
+                y: randomY * (1 - p),
+                rotation: randomR * (1 - p),
+                scale: 0.2 + 0.8 * p,
+              });
+            });
+          },
         });
       } else {
+        // Mobile: simple fade in
         items.forEach((item) => {
-          gsap.fromTo(item, 
+          gsap.fromTo(
+            item,
             { opacity: 0, y: 30 },
-            { 
-              opacity: 1, 
-              y: 0, 
+            {
+              opacity: 1,
+              y: 0,
               duration: 0.6,
               scrollTrigger: {
                 trigger: item,
-                start: "top 90%",
-                toggleActions: "play none none reverse",
-              }
+                start: 'top 90%',
+                toggleActions: 'play none none reverse',
+              },
             }
           );
         });
       }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []); // runs once on mount only
+
+  // Phase 2: When showAll becomes true — kill pin, show all images
+  useEffect(() => {
+    if (!showAll) return;
+
+    // Step 1: Kill every ScrollTrigger (including the pin)
+    ScrollTrigger.getAll().forEach((st) => st.kill());
+    gsap.killTweensOf('*');
+
+    // Step 2: Force the section out of pinned state
+    if (sectionRef.current) {
+      sectionRef.current.style.position = '';
+      sectionRef.current.style.top = '';
+      sectionRef.current.style.left = '';
+      sectionRef.current.style.width = '';
+    }
+
+    // Step 3: Wait for DOM to render all new images, then make them visible
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const items = galleryRef.current?.querySelectorAll('.gallery-item');
+        if (items) {
+          gsap.set(items, {
+            opacity: 1,
+            x: 0,
+            y: 0,
+            rotation: 0,
+            scale: 1,
+            clearProps: 'all',
+          });
+        }
+        ScrollTrigger.refresh();
+      });
     });
+  }, [showAll]);
 
-    ScrollTrigger.refresh();
-    return () => mm.revert();
-  }, [visibleImages, showAll]); 
+  // Assign random values to each item via data attributes on first render
+  useEffect(() => {
+    const items = galleryRef.current?.querySelectorAll('.gallery-item');
+    items?.forEach((item) => {
+      if (!item.dataset.rx) {
+        item.dataset.rx = ((Math.random() - 0.5) * 1500).toFixed(2);
+        item.dataset.ry = ((Math.random() - 0.5) * 800).toFixed(2);
+        item.dataset.rr = ((Math.random() - 0.5) * 90).toFixed(2);
+      }
+    });
+  }, [visibleImages]);
 
-  const handleExploreMore = (e) => {
-    e.preventDefault();
+  const handleExploreMore = () => {
+    // Kill pin immediately on click before state update
+    ScrollTrigger.getAll().forEach((st) => st.kill());
+    gsap.killTweensOf('*');
+
+    // Reset any GSAP inline styles on section
+    if (sectionRef.current) {
+      gsap.set(sectionRef.current, { clearProps: 'all' });
+    }
+
     setShowAll(true);
-    // Force a small delay to allow DOM to render before refresh
-    setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 100);
   };
 
   return (
-    <section 
-      ref={containerRef} 
-      id="gallery" 
-      className="relative py-16 lg:py-24 bg-base-light px-4 overflow-visible min-h-screen"
+    <section
+      ref={sectionRef}
+      id="gallery"
+      className="relative py-16 lg:py-24 bg-base-light px-4"
     >
       <div className="container mx-auto flex flex-col items-center">
+        {/* Heading */}
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-title text-shanora-dark mb-4">
             Our <span className="text-shanora-purple">Gallery</span>
@@ -128,13 +205,14 @@ const Gallery = () => {
           <div className="h-1 w-24 bg-shanora-pink mx-auto rounded-full"></div>
         </div>
 
-        <div 
+        {/* Grid */}
+        <div
           ref={galleryRef}
           className="columns-2 md:columns-3 xl:columns-4 gap-4 lg:gap-6 space-y-4 lg:space-y-6 w-full"
         >
           {visibleImages.map((image) => (
-            <div 
-              key={`${image.id}-${showAll}`}
+            <div
+              key={image.id}
               className="gallery-item break-inside-avoid group relative overflow-hidden rounded-xl lg:rounded-2xl border border-white/40 shadow-sm bg-white"
             >
               <div className="absolute inset-0 bg-shanora-purple/30 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 flex items-center justify-center text-center p-4">
@@ -142,9 +220,9 @@ const Gallery = () => {
                   {image.title}
                 </span>
               </div>
-              <img 
-                src={image.src} 
-                alt={image.title} 
+              <img
+                src={image.src}
+                alt={image.title}
                 className="w-full h-auto object-cover"
                 loading="lazy"
               />
@@ -152,15 +230,18 @@ const Gallery = () => {
           ))}
         </div>
 
-        {/* Explicitly check showAll and items length */}
-        {!showAll && galleryImages.length > INITIAL_COUNT && (
-          <div className="mt-12 mb-20 text-center relative z-[100] w-full">
-            <button 
+        {/* Button — completely outside GSAP scope */}
+        {!showAll && (
+          <div
+            className="mt-12 mb-8 text-center w-full"
+            style={{ position: 'relative', zIndex: 9999 }}
+          >
+            <button
               onClick={handleExploreMore}
+              style={{ pointerEvents: 'auto', position: 'relative', zIndex: 9999 }}
               className="group bg-white border-2 border-shanora-purple text-shanora-purple px-10 py-4 rounded-full font-bold text-lg hover:bg-shanora-purple hover:text-white transition-all duration-300 shadow-xl flex items-center gap-2 mx-auto cursor-pointer"
-              style={{ pointerEvents: 'auto' }}
             >
-              Explore More 
+              Explore More
               <IoChevronDownOutline className="group-hover:translate-y-1 transition-transform" />
             </button>
           </div>

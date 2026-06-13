@@ -91,7 +91,7 @@ const ContactFooter = () => {
               {/* Google Maps Integration */}
               <div className="w-full h-48 rounded-3xl overflow-hidden border border-white/10 shadow-inner">
                 <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3954.912664537167!2d80.6091483!3d7.4748809!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae35da07c2a5789%3A0x6b49e89d980479f6!2sUdupihilla%2C%20Matale!5e0!3m2!1sen!2slk!4v1712351234567!5m2!1sen!2slk" 
+                  src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15825.00718155855!2d80.6110440740967!3d7.437366963149384!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae345140fe2b7cf%3A0x65064d80d2c6a7df!2sShanora%20Cakes!5e0!3m2!1sen!2slk!4v1781360779711!5m2!1sen!2slk" 
                   width="100%" 
                   height="100%" 
                   style={{ border: 0, filter: 'grayscale(0.3) invert(0.9) contrast(0.9)' }} 
